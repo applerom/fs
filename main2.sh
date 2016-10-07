@@ -20,6 +20,9 @@ if [[ ! -O ${MY_TMP_DIR} ]]; then # Check that the dir exists and is owned by ou
 fi
 chmod 700 $MY_TMP_DIR
 
+if [ -f "vars.cfg" ] ; then
+	source "vars.cfg"
+fi
 function source_my_inc_file {	
 	if [ -f $1 ] ; then
 		source $1
@@ -28,7 +31,6 @@ function source_my_inc_file {
 		exit 1
 	fi
 }
-source_my_inc_file vars.cfg
 source_my_inc_file colours.inc.sh
 source_my_inc_file funcs.inc.sh
 source_my_inc_file aws.inc.sh
