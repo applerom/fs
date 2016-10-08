@@ -323,11 +323,19 @@ function fs_ec2 {
 	sed -i 's|<X-PRE-PROCESS cmd="set" data="external_sip_ip=stun:stun.freeswitch.org"/>|<X-PRE-PROCESS cmd="set" data="external_sip_ip=$EC2_EXT_IP"/>|' /usr/local/freeswitch/conf/vars.xml
 }
 function fs_certs {
-	mkdir /usr/local/freeswitch/certs > /dev/null 2>&1
-# по другому уже, проверить!!!
-	cat $MYCERT_DIR/$MYCERT_CRT $MYCERT_DIR/$MYCERT_KEY $MYCERT_DIR/$MYCERT_CA > /usr/local/freeswitch/certs/wss.pem
-	cat $MYCERT_DIR/$MYCERT_CRT $MYCERT_DIR/$MYCERT_KEY $MYCERT_DIR/$MYCERT_CA > /usr/local/freeswitch/certs/agent.pem
+	mkdir /usr/local/freeswitch/certs > /dev/null 2>&1 #check if it is created during install
+
+	cat $MYCERT_DIR/$MYCERT_CRT $MYCERT_DIR/$MYCERT_KEY $MYCERT_DIR/$MYCERT_CA > /usr/local/freeswitch/certs/tls.pem
 	cp $MYCERT_DIR/$MYCERT_CA /usr/local/freeswitch/certs/cafile.pem
+	cp /usr/local/freeswitch/certs/tls.pem /usr/local/freeswitch/certs/wss.pem
+	cp /usr/local/freeswitch/certs/tls.pem /usr/local/freeswitch/certs/dtls-srtp.pem
+	cp /usr/local/freeswitch/certs/tls.pem /usr/local/freeswitch/certs/agent.pem
+	# for old versions & FusionPBX:
+	mkdir /usr/local/freeswitch/conf/ssl > /dev/null 2>&1
+	cp /usr/local/freeswitch/certs/tls.pem /usr/local/freeswitch/conf/ssl/wss.pem
+	cp /usr/local/freeswitch/certs/tls.pem /usr/local/freeswitch/conf/ssl/dtls-srtp.pem
+	cp /usr/local/freeswitch/certs/tls.pem /usr/local/freeswitch/conf/ssl/agent.pem
+	cp /usr/local/freeswitch/certs/agent.pem /usr/local/freeswitch/conf/ssl/cafile.pem
 }
 
 ### END ### fs.inc.sh #############################################################################

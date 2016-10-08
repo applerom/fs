@@ -120,7 +120,8 @@ function fusion_configure {
 		FirstTimeInstall="/var/www/html/core/install/install.php"
 	fi
 
-#	sed -i 's|<param name="db-info" value="host=localhost user=postgres password=nopassword dbname=fusionpbx connect_timeout=10" />|<param name="db-info" value="host=10.100.21.31 user=fsdbadmin password=5dkjFFs5 dbname=fusionpbx connect_timeout=10" />|' /autoload_configs/cdr_pg_csv.conf.xml
+	# Todo: postgres setup for fusionpbx
+	#	sed -i 's|<param name="db-info" value="host=localhost user=postgres password=nopassword dbname=fusionpbx connect_timeout=10" />|<param name="db-info" value="host=10.100.21.31 user=fsdbadmin password=mypassword dbname=fusionpbx connect_timeout=10" />|' /autoload_configs/cdr_pg_csv.conf.xml
 	
 	sed -i "s|admin_username = '';|admin_username = 'admin';|" $FirstTimeInstall
 	sed -i "s|admin_password = '';|admin_password = 'sf16pas';|" $FirstTimeInstall
