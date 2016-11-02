@@ -122,7 +122,7 @@ if [ $? != 0 ]; then exit 0; fi
 			if [ ! -f $MYSH ] ; then # protect from repeated running
 				cat <<EOF >>$MYSH
 sudo hostname $MYSITE
-echo -e "Debian `cat /etc/debian_version`"
+echo -e "Debian \`cat /etc/debian_version\`"
 df -k | awk '\$NF=="/"{printf "Disk Usage: %s\n", \$5}'
 EOF
 			fi

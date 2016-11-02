@@ -44,6 +44,7 @@ function copy_files_to_remote_system {
 	echo "copy files"
 
 	echo "SiteName=$SiteName" >> vars.cfg
+	echo "AWSregion=$AWSregion" >> vars.cfg
 	echo "AvailabilityZone=$AvailabilityZone" >> vars.cfg
 
 	scp -i $KEY_PAIR ./certs/* $LINUX_USER@$PublicIpAddress:certs
@@ -62,6 +63,7 @@ KEY_PAIR=sec16all.pem
 LINUX_USER=admin
 PublicIpAddress=10.100.1.121
 SiteName=vpro.by
+AWSregion=us-east-1
 AvailabilityZone=us-east-1b
 
 RSDIR="./fs$SCRIPT_VERSION"

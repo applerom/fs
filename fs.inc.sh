@@ -281,6 +281,7 @@ function fs_service {
 	chmod ug=rw,o= /etc/default/freeswitch
 	 
 	cp /usr/local/src/freeswitch/debian/freeswitch-sysvinit.freeswitch.init  /etc/init.d/freeswitch
+	sed -i 's|USER=freeswitch|USER=root|' /etc/init.d/freeswitch
 	 
 	chown $FS_USER:$FS_GROUP /etc/init.d/freeswitch
 	chmod u=rwx,g=rx,o= /etc/init.d/freeswitch

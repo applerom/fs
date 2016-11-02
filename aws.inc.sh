@@ -12,12 +12,12 @@ function aws_credentials_install {
 function aws_logger_install {
 	cp awslogs-agent.cfg $MY_TMP_DIR/awslogs-agent.cfg
 	wget -q https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O $MY_TMP_DIR/awslogs-agent-setup.py
-	python $MY_TMP_DIR/awslogs-agent-setup.py --non-interactive --region $AvailabilityZone --configfile $MY_TMP_DIR/awslogs-agent.cfg > /dev/null 2>&1
+	python $MY_TMP_DIR/awslogs-agent-setup.py --non-interactive --region $AWSregion --configfile $MY_TMP_DIR/awslogs-agent.cfg > /dev/null 2>&1
 }
 
 function amazon_inspector_install {
 	if [[ $DIST_TYPE == "ubuntu" ]] && [[ $(echo $VERSION_ID | grep -c "14\..*") == "1" ]] ; then
-		wget -q https://s3-us-west-2.amazonaws.com/inspector.agent.us-west-2/latest/install -O $MY_TMP_DIR/AmazonInspectorInstall
+		wget -q https://d1wk0tztpsntt1.cloudfront.net/linux/latest/install -O $MY_TMP_DIR/AmazonInspectorInstall
 		bash $MY_TMP_DIR/AmazonInspectorInstall > /dev/null 2>&1
 		if [[ $? != 0 ]]; then
 			whiptail --infobox "Error — Amazon Inspector wasn't installed, exit!"
