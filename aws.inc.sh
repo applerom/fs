@@ -12,7 +12,7 @@ function aws_credentials_install {
 function aws_logger_install {
 	cp awslogs-agent.cfg $MY_TMP_DIR/awslogs-agent.cfg
 	wget -q https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O $MY_TMP_DIR/awslogs-agent-setup.py
-	python $MY_TMP_DIR/awslogs-agent-setup.py --non-interactive --region $AWSregion --configfile $MY_TMP_DIR/awslogs-agent.cfg > /dev/null 2>&1
+	python $MY_TMP_DIR/awslogs-agent-setup.py --non-interactive --region $AWS_REGION --configfile $MY_TMP_DIR/awslogs-agent.cfg > /dev/null 2>&1
 }
 
 function amazon_inspector_install {

@@ -5,6 +5,10 @@ SCRIPT_VERSION=0.50
 MYSITE=my.site.com
 MY_DEPLOY_SERVER=52.38.7.241
 MYSH=/etc/profile.d/my.sh
+#AWSregion=us-east-1
+#AVAILABILITY_ZONE=us-east-1b
+AVAILABILITY_ZONE=`wget -T 10 -O- http://169.254.169.254/latest/meta-data/placement/availability-zone 2>/dev/null`
+AWS_REGION=`echo $AVAILABILITY_ZONE | sed 's|.$||'`
 
 ### MAIN 2 ################################################################################
 if [[ $UID != 0 ]] ; then 
@@ -35,6 +39,7 @@ source_my_inc_file colours.inc.sh
 source_my_inc_file funcs.inc.sh
 source_my_inc_file aws.inc.sh
 source_my_inc_file debian.inc.sh
+source_my_inc_file odbc.cfg
 source_my_inc_file odbc.inc.sh
 source_my_inc_file fs.inc.sh
 source_my_inc_file fusion.inc.sh
@@ -46,7 +51,6 @@ source_my_inc_file whiptail.inc.sh
 
 get_os_info
 get_ext_ip
-echo "1"
 whiptail --title "FreeSwitch Install and Setup script, ver. $SCRIPT_VERSION" --yes-button "Continue" --no-button "Exit" \
 --yesno \
 "\
@@ -88,7 +92,9 @@ case $DIST_TYPE in
 esac
 MYCERT_DIR=$MYHOME/certs
 
-get_var_txt_def MYSITE "Enter FQDN of your computer/server/site" $SiteName "Example: my.secrom.com, current hostname is `hostname`"
+
+CurrentSiteName=`hostname`
+get_var_txt_def MYSITE "Enter FQDN of your computer/server/site" $CurrentSiteName "Example: my.site.com"
 hostname $MYSITE
 
 
