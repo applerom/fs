@@ -1,5 +1,7 @@
 ### odbc.inc.sh ### ODBC-driver ####################################################################
 
+# Todo: only DB with name "freeswitch" for PostgreSQL by default, need to custom
+
 function odbc_debian {
 
 odbc_debian1=$(whiptail --title "ODBC-driver for $PSEUDONAME" --separate-output --cancel-button "Exit" \
@@ -33,9 +35,8 @@ EOF
 	if [[ $(echo $odbc_debian1 | grep -c "ODBC-PostgreSQL") == "1" ]]  ; then
 		dialogGaugePrompt 60 "Install PostgreSQL client"
 		dialogAptGet 60 38 install postgresql-client odbc-postgresql
-		source_my_inc_file odbc-postgre.cfg
-		PGPASSWORD=$POSTGRE_PASSWORD createdb freeswitch --host $POSTGRE_SERVER --username=$POSTGRE_USER
-		#PGPASSWORD=fe41GHy9 createdb freeswitch --host fsdb1.cfevji3xkn63.us-east-1.rds.amazonaws.com --username=fsdb1admin
+		#source_my_inc_file odbc-postgre.cfg
+		#PGPASSWORD=$POSTGRE_PASSWORD createdb freeswitch --host $POSTGRE_SERVER --username=$POSTGRE_USER
 	fi
 	cat >> /etc/odbcinst.ini <<EOF
 [PostgreSQL]
