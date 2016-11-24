@@ -40,7 +40,7 @@ $_mod_shout_4\n\
 	fs_install1=$(whiptail --title "Install FreeSwitch and accessories" --separate-output --cancel-button "Exit" \
 --backtitle  "" \
 --checklist "Choose configuration" 28 80 18 \
-"PostgreSQL-in-Core" "Enable core PostgreSQL support" ON \
+"PostgreSQL-in-Core" "Enable core PostgreSQL support (and ZRTP)" ON \
 "mod_v8" "Install mod_v8" ON \
 "mod_nibblebill" "Install mod_nibblebill" ON \
 "mod_silk" "Install mod_silk" ON \
@@ -51,10 +51,12 @@ $_mod_shout_4\n\
 "mod_cluechoo" "Install mod_cluechoo" ON \
 "mod_ilbc" "Install mod_ilbc" ON \
 "mod_siren" "Install mod_siren" ON \
+"mod_memcache" "Install mod_memcache" ON \
 "$_mod_shout_1" "$_mod_shout_2" $_mod_shout_3 \
 "Lua" "Install Lua, LuaRocks and Lua-modules" ON \
 "AllSounds" "Install all sounds and examples" ON \
 "OwnCerts" "Install own certificates" ON \
+"OpusFromSources" "Install Opus-codec from sources (instead Debian one)" ON \
 "Reload-if-exist" "Reload FreeSwitch sources if they exist (+backup)" OFF \
 "EC2_NAT" "Set up FreeSwitch for NAT on EC2 " OFF 3>&1 1>&2 2>&3 )
 	if [ $? != 0 ]; then exit 0; fi
@@ -81,7 +83,7 @@ $_mod_shout_4\n\
 				dialogAptGet 10 4 install lua5.2 liblua5.2-dev
 			fi
 			dialogGaugePrompt 14 "Install all FS deps"
-			dialogAptGet 14 36 freeswitch-video-deps-most
+			dialogAptGet 14 36 freeswitch-video-deps-most memcached
 		fi
 
 		if [[ $DIST_TYPE == "ubuntu" ]] ; then
@@ -119,8 +121,8 @@ $_mod_shout_4\n\
 		dialogGaugePrompt 56 "Bootstrap Freeswitch sources"
 		dialogBootstrap 56 8 -j
 		if [[ $(echo $fs_install1 | grep -c "PostgreSQL-in-Core") == "1" ]]  ; then
-			dialogGaugePrompt 64 "Configure Freeswitch sources with POSTGRE-support"
-			dialogConfigure 64 6 --enable-core-pgsql-support
+			dialogGaugePrompt 64 "Configure Freeswitch sources with POSTGRE-support and ZRTP"
+			dialogConfigure 64 6 --enable-core-pgsql-support --enable-zrtp
 		else
 			dialogGaugePrompt 64 "Configure Freeswitch sources"
 			dialogConfigure 64 6
@@ -197,6 +199,20 @@ $_mod_shout_4\n\
 			dialogGaugePrompt 99 "Setup Freeswitch for EC2"
 			fs_ec2
 		fi
+		if [[ $(echo $fs_install1 | grep -c "OpusFromSources") == "1" ]]  ; then
+			dialogGaugePrompt 99 "Install Opus from souces"
+			cd /usr/local/src/freeswitch/libs/
+			dialogGitClone 99 1 https://freeswitch.org/stash/scm/sd/opus.git
+			cd opus
+			dialogGaugePrompt 99 "Preconfigure Opus"
+			dialogAutogen 99 1
+			dialogGaugePrompt 99 "Configure Opus"
+			dialogConfigure 99 1
+			dialogGaugePrompt 99 "Compile/install Opus"
+			dialogMake 99 1 10
+			dialogGaugePrompt 99 "Install Opus"
+			dialogMake 99 1 10 install
+		fi
 		if [[ $(echo $fs_install1 | grep -c "Lua") == "1" ]]  ; then
 			dialogGaugePrompt 99 "Compile/install Luarocks and Lua-modules"
 			cd /usr/local/src/
@@ -204,10 +220,11 @@ $_mod_shout_4\n\
 			cd /usr/local/src/luarocks
 			dialogGaugePrompt 99 "Configure Luarocks"
 			dialogConfigure 99 1
-			dialogGaugePrompt 99 "Compile/install Luarocks"
-			dialogMake 99 1 bootstrap
+			dialogGaugePrompt 99 "Compile/install Luarocks in /usr/local as a rock"
+			dialogMake 99 1 10 bootstrap
 			dialogGaugePrompt 99 "Install LuaSocket"
 			luarocks install luasocket > /dev/null 2>&1
+			git config --global url.https://github.com/.insteadOf git://github.com/ > /dev/null 2>&1
 			dialogGaugePrompt 99 "Install LuaSec"
 			luarocks install luasec > /dev/null 2>&1
 			dialogGaugePrompt 99 "Install LuaXML"

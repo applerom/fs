@@ -1,8 +1,8 @@
 ### fusion.inc.sh ### FusionPBX #############################################################################
 FTP_FS_USER=fsadmin
-FTP_FS_USER_PAS=aFR92xFD
+FTP_FS_USER_PAS=mypassword
 FTP_PBX_USER=pbxadmin
-FTP_PBX_USER_PAS=aFR92xFD
+FTP_PBX_USER_PAS=mypassword
 
 function fusion {
 	fusion1=$(whiptail --title "Install FusionPBX" --separate-output --cancel-button "Exit" \
@@ -69,7 +69,7 @@ EOF
 			chown -R www-data:www-data /var/www
 			
 			dialogGaugePrompt 20 "Install PHP"
-			dialogAptGet 20 18 install php5 php5-cli php5-common php5-mysql php5-mcrypt libapache2-mod-php5 php-pear php5-curl php5-gd php5-odbc php5-pgsql memcached
+			dialogAptGet 20 18 install php5 php5-cli php5-common php5-mysql php5-mcrypt libapache2-mod-php5 php-pear php5-curl php5-gd php5-odbc php5-pgsql php5-memcached
 
 			dialogGaugePrompt 39 "Install Apache as service and restart"
 			a2dismod mpm_event  > /dev/null 2>&1

@@ -10,6 +10,12 @@ MYSH=/etc/profile.d/my.sh
 AVAILABILITY_ZONE=`wget -T 10 -O- http://169.254.169.254/latest/meta-data/placement/availability-zone 2>/dev/null`
 AWS_REGION=`echo $AVAILABILITY_ZONE | sed 's|.$||'`
 
+MYHOME=/home/admin
+MYCERT_DIR=$MYHOME/certs
+MYCERT_KEY=vpro.by.key.pem
+MYCERT_CRT=2_vpro.by.crt
+MYCERT_CA=1_root_bundle.crt
+
 ### MAIN 2 ################################################################################
 if [[ $UID != 0 ]] ; then 
 	whiptail --infobox "Run only under root! Add sudo at the begin and repeat your command again."

@@ -187,6 +187,40 @@ dialogBootstrap()
 	rm -f "$MY_TMP_DIR/bootstrap-status"
 }
 
+dialogAutogen()
+{
+	download_start=$1
+	download_range=$2
+	_p=$download_start
+	_p1=0
+	_p2=0
+	mkfifo -m 0600 "$MY_TMP_DIR/autogen-status"
+	shift 2
+	exec 3>&2
+	exec 2> /dev/null
+	./autogen.sh "$@" > "$MY_TMP_DIR/autogen-status" &
+	exec 2>&3
+#libtoolize: copying file m4/ltsugar.m4'
+	while read libtoolize copying somefile _m4 ; do
+		case $libtoolize in
+			libtoolize)
+#				((_p2++))
+				if (( _p1 < 10 )); then ((_p1++)) ; fi
+				_p=$(( download_start + ((_p1 * download_range) / 10 ) ))
+				echo "XXX"
+				echo $_p
+				echo "$libtoolize $copying file $_yes"
+#				echo "_p2=$_p2 || $libtoolize $copying $somefile $_yes"
+				echo "XXX"
+			;;
+			*)
+			;;
+		esac
+	done < "$MY_TMP_DIR/autogen-status"
+	wait $!
+	rm -f "$MY_TMP_DIR/autogen-status"
+}
+
 dialogConfigure()
 {
 	download_start=$1
